@@ -34,13 +34,16 @@ Incoming messages larger than `CONFIG_NODEMCU_CMODULE_WEBSOCKET_MAX_MSG` (defaul
 
 ## Tested
 
-* Chips: ESP32 (ESP32-D0WDQ6) and ESP32-S2 (LOLIN S2 Mini), ESP-IDF 5.3.2, `esp_websocket_client` 1.8.0, Lua 5.1 build.
-* Text and binary echo; messages of 6000 and 7500 bytes received complete (reassembled from fragments);
-  messages above the limit (9000, 20000 bytes) are dropped with a log line, no crash, connection stays up.
-* `ws:close()` gives status `0`; killing the server gives `-19`; unknown host `-5`; unreachable port `-18`;
-  an invalid URL raises a Lua error. Reconnecting from a timer in the `close` callback works.
-* 50 connect/close cycles with no heap growth (ESP32-S2).
-* Used as the transport of a small IoT "things" client (sensors, registration, periodic data) talking to a custom WebSocket server.
+* ESP-IDF 5.3.2, `esp_websocket_client` 1.8.0, Lua 5.1 build.
+* **ESP32-S2** (LOLIN S2 Mini), full test plan against a local Node.js `ws` echo server:
+  text and binary echo; messages of 6000 and 7500 bytes received complete (reassembled from fragments);
+  messages above the limit (9000, 20000 bytes) are dropped with a log line, no crash, connection stays up;
+  `ws:close()` gives status `0`; killing the server gives `-19`; unknown host `-5`; unreachable port `-18`;
+  an invalid URL raises a Lua error; reconnecting from a timer in the `close` callback works;
+  50 connect/close cycles with no heap growth.
+* **ESP32** (ESP32-D0WDQ6): connect, register and exchange data with a custom WebSocket server
+  (small IoT "things" client: registration, periodic sensor data), running for about an hour; the full test plan
+  above was not repeated on this chip.
 
 **Not tested:** `wss://` (TLS), subprotocols, the Lua 5.3 build, other chips (S3, C3, C6).
 
