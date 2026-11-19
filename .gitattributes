@@ -1,0 +1,2 @@
+# Never convert line endings of patches (a CRLF patch does not apply to LF sources)
+*.patch -text
